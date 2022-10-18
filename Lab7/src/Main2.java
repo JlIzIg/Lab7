@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class Main2 {
@@ -28,7 +29,7 @@ public class Main2 {
 
     public static void main(String[] args) throws IOException {
 
-        FiguresInFile fg = new FiguresInFile();
+       /* FiguresInFile fg = new FiguresInFile();
         fg.setList((ArrayList<Prism>) getPrismsArray(15).getPrisms());
         long timeStart = System.currentTimeMillis(), t1, t2, t3, t4;
         t1 = System.currentTimeMillis() - timeStart;
@@ -61,7 +62,47 @@ public class Main2 {
         fg2.deserializeSquares("fileSquaresSerialize.txt");
         fg2.serializeFastJSONSquares("squares2.json");
         fg2.clearSquares();
-        fg2.deserializeFastJSONSquares("squares2.json");
+        fg2.deserializeFastJSONSquares("squares2.json");*/
+
+
+        ArrayList<Square> squaresArrayList = (ArrayList<Square>) getSquaresArray(10).getSquares();
+        ArrayList<Prism> prismsArrayList = (ArrayList<Prism>) getPrismsArray(10).getPrisms();
+
+        long timeStart = System.currentTimeMillis(), t1, t2, t3, t4;
+        WorkWithFiles workWithFiles = new WorkWithFiles();
+        t1 = System.currentTimeMillis() - timeStart;
+
+        timeStart = System.currentTimeMillis();
+        workWithFiles.save("fileSquares.txt", squaresArrayList);
+        workWithFiles.Clear(squaresArrayList);
+        workWithFiles.load("fileSquares.txt", squaresArrayList);
+        workWithFiles.save("fileSquares2.txt", squaresArrayList);
+        workWithFiles.save("filePrisms.txt", prismsArrayList);
+        workWithFiles.Clear(prismsArrayList);
+        workWithFiles.load("filePrisms.txt", prismsArrayList);
+        workWithFiles.save("filePrisms2.txt", prismsArrayList);
+        t2 = System.currentTimeMillis() - timeStart;
+
+        timeStart = System.currentTimeMillis();
+        workWithFiles.serialize("fileSquaresSerialize.txt", squaresArrayList);
+        workWithFiles.deserialize("fileSquaresSerialize.txt", squaresArrayList);
+        workWithFiles.serialize("filePrismsSerialize.txt", prismsArrayList);
+        workWithFiles.deserialize("filePrismsSerialize.txt", prismsArrayList);
+        t3 = System.currentTimeMillis() - timeStart;
+
+        timeStart = System.currentTimeMillis();
+        workWithFiles.sFastJSON("fileSquaresFJSON.json", squaresArrayList);
+        workWithFiles.Clear(squaresArrayList);
+        workWithFiles.dFastJSON("fileSquaresFJSON.json", squaresArrayList);
+        workWithFiles.sFastJSON("filePrismsFJSON.json", prismsArrayList);
+        workWithFiles.Clear(prismsArrayList);
+        workWithFiles.dFastJSON("filePrismsFJSON.json", prismsArrayList);
+        t4 = System.currentTimeMillis() - timeStart;
+
+        System.out.println("Initial Data Generation:	" + t1 + " ms");
+        System.out.println("Text format Save/load:		" + t2 + " ms");
+        System.out.println("Java serialization/des:		" + t3 + " ms");
+        System.out.println("FastJackson serialization/des:	" + t4 + " ms");
     }
 
 }
